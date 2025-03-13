@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testar API</title>
+</head>
+<body>
+    <h1>Testar API de Perguntas</h1>
+    <textarea id="questionInput" placeholder="Digite sua pergunta..." rows="4" cols="50"></textarea><br>
+    <button id="sendButton">Enviar Pergunta</button>
+    <div id="response"></div>
+
+    <script>
+        document.getElementById('sendButton').addEventListener('click', async () => {
+            const question = document.getElementById('questionInput').value;
+            const responseDiv = document.getElementById('response');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/questions/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    responseDiv.innerText = `Resposta: ${data.answer}`;
+                } else {
+                    responseDiv.innerText = `Erro: ${data.message}`;
+                }
+            } catch (error) {
+                responseDiv.innerText = `Erro ao se conectar: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
